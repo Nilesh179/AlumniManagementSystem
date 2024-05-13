@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UpdateJob</title>
+    <style>
+        body {
+            background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        .update-container {
+            margin-top: 50px;
+            text-align: center;
+        }
+        input[type=text], input[type=file], select, button {
+            padding: 12px 20px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="update-container">
+    <h2>Update Job Details</h2>
+
+    <form id="updateForm">
+        <label for="title">Job Title:</label><br>
+        <input type="text" id="title" name="title" disabled><br><br>
+
+        <label for="name">Company Name:</label><br>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="location">Location:</label><br>
+        <input type="text" id="location" name="location"><br><br>
+
+        <label for="type">Job Type:</label><br>
+        <select id="type" name="type">
+            <option value="REMOTE">Remote</option>
+            <option value="ON SITE">On Site</option>
+        </select><br><br>
+
+        <label for="days">Expire In:</label><br>
+        <input type="text" id="days" name="days"><br><br>
+
+        <label for="description">Job Description:</label><br>
+        <input type="text" id="description" name="description"><br><br>
+        
+        <label for="link">Link:</label><br>
+        <input type="text" id="link" name="link" placeholder="mandator to use https:// or www. in link" pattern="(?:https?:\/\/|www\.)\S+"><br><br>
+        <br>
+        <button type="submit">Update</button>
+    </form> 
+    <div id="updateMessage" style="margin-top: 20px; display: none; border: 2px solid red; padding: 1.3em;"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+
+<script>
+    // Firebase configuration
+    var config = {
+        apiKey: "AIzaSyCbE3UXkP2J5-T_fSuCsmAWU_bNLiRH8aE",
+        authDomain: "alumni-management-system-3800d.firebaseapp.com",
+        projectId: "alumni-management-system-3800d",
+        storageBucket: "alumni-management-system-3800d.appspot.com",
+        messagingSenderId: "496530271243",
+        appId: "1:496530271243:web:f69ffeb96dd389511aab0e",
+        measurementId: "G-3X4HB12QQP",
+        databaseURL: "https://alumni-management-system-3800d-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(config);
+
+    // Reference to the Firebase database
+    var database = firebase.database();
+
+    // Get elements
+    var updateForm = document.getElementById('updateForm');
+    var updateMessage = document.getElementById('updateMessage');
+    var criminalNumberUpdateInput = document.getElementById('title');
+
+    // Function to search for criminal record
+    function searchCriminal() {
+        var title = getQueryParameter('id'); // Get ID from URL
+        if (title !== null) {
+            database.ref('JobsPosted/' + title).once('value', function(snapshot) {
+                var data = snapshot.val();
+                if (data) {
+                    // Display update form with existing details
+                    criminalNumberUpdateInput.value = title;
+                    document.getElementById('name').value = data.name || '';
+                    document.getElementById('location').value = data.location || '';
+                    document.getElementById('days').value = data.days || '';
+                    document.getElementById('description').value = data.description || '';
+                    document.getElementById('link').value = data.link || '';
+                    document.getElementById('type').value = data.type || 'male';
+                    // Display update form
+                    updateForm.style.display = 'block';
+                } else {
+                    alert('Job record not found.');
+                }
+            });
+        } else {
+            alert('Invalid URL parameter.');
+        }
+    }
+
+    // Listen for form submission
+    updateForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form values
+        var title = document.getElementById('title').value;
+        var name = document.getElementById('name').value;
+        var location = document.getElementById('location').value;
+        var days = document.getElementById('days').value;
+        var description = document.getElementById('description').value;
+        var link = document.getElementById('link').value;
+        var type = document.getElementById('type').value;
+
+        // Update information in Firebase
+        var updates = {};
+        updates['JobsPosted/' + title + '/name'] = name;
+        updates['JobsPosted/' + title + '/location'] = location;
+        updates['JobsPosted/' + title + '/days'] = days;
+        updates['JobsPosted/' + title + '/description'] = description;
+        updates['JobsPosted/' + title + '/link'] = link;
+        updates['JobsPosted/' + title + '/type'] = type;
+
+        // Call function to update Firebase
+        updateFirebase(updates);
+    });
+
+    // Function to update information in Firebase
+    function updateFirebase(updates) {
+        database.ref().update(updates, function(error) {
+            if (error) {
+                updateMessage.innerHTML = 'Error updating information: ' + error.message;
+                updateMessage.style.color = 'red';
+            } else {
+                updateMessage.innerHTML = 'Information updated successfully';
+                updateMessage.style.color = 'green';
+                // Clear form after successful update
+                updateForm.reset();
+                // Hide update form
+                updateForm.style.display = 'none';
+                // Redirect to the previous page
+                window.history.back();
+            }
+            // Show update message
+            updateMessage.style.display = 'block';
+            setTimeout(function(){
+                updateMessage.style.display = 'none';
+            }, 3000);
+        });
+    }
+
+    // Function to get query parameter from URL
+    const getQueryParameter = (name) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    };
+
+    // Call searchCriminal function on page load
+    searchCriminal();
+</script>
+
+</body>
+</html>

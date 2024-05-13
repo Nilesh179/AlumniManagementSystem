@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-storage.js"></script>
+    <style>
+        /* Add your CSS styles here */
+        /* Example styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="file"] {
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Enter Personal Details First</h2>
+    <form id="profileForm">
+        <!-- Personal Information -->
+        <h3>Personal Information</h3>
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" required>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" required>
+        <label for="photo">Photo:</label>
+        <input type="file" id="photo">
+        <label for="email">Email:</label>
+        <input type="email" id="email" required readonly>
+        <label for="dob">DOB:</label>
+        <input type="date" id="dob" required>
+        
+        <!-- Course Information -->
+        <h3>Course Information</h3>
+        <label for="rollNo">Roll No:</label>
+        <input type="text" id="rollNo" required>
+        <label for="course">Course:</label>
+        <input type="text" id="course" required>
+        <label for="passingYear">Passing Year:</label>
+        <input type="number" id="passingYear" required>
+        
+        <!-- Professional Information -->
+        <h3>Professional Information</h3>
+        <label for="currentDesignation">Current Designation:</label>
+        <input type="text" id="currentDesignation">
+        <label for="orgName">Name of Organisation:</label>
+        <input type="text" id="orgName">
+        <label for="currentCity">Current City:</label>
+        <input type="text" id="currentCity">
+        
+        <!-- Address Details -->
+        <h3>Address Details</h3>
+        <label for="pin">PIN:</label>
+        <input type="number" id="pin" required>
+        <label for="city">City:</label>
+        <input type="text" id="city" required>
+        <label for="state">State:</label>
+        <input type="text" id="state" required>
+        <label for="address">Address:</label>
+        <textarea id="address" required></textarea>
+        
+        <!-- Buttons -->
+        <button type="reset">Reset</button>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyCbE3UXkP2J5-T_fSuCsmAWU_bNLiRH8aE",
+        authDomain: "alumni-management-system-3800d.firebaseapp.com",
+        projectId: "alumni-management-system-3800d",
+        storageBucket: "alumni-management-system-3800d.appspot.com",
+        messagingSenderId: "496530271243",
+        appId: "1:496530271243:web:f69ffeb96dd389511aab0e",
+        measurementId: "G-3X4HB12QQP",
+        databaseURL: "https://alumni-management-system-3800d-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Reference to Firebase Storage
+    var storageRef = firebase.storage().ref();
+
+    // Fetch the email from local storage
+    const userEmail = localStorage.getItem('userEmail');
+    document.getElementById("email").value = userEmail;
+
+        var messagesRef = firebase.database().ref('AlumniProfiles');
+    
+        // Listen for form submit
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+    
+            // Get form values
+            var firstName = document.getElementById("firstName").value;
+            var lastName = document.getElementById("lastName").value;
+            var email = userEmail;
+            var dob = document.getElementById("dob").value;
+            var rollNo = document.getElementById("rollNo").value;
+            var course = document.getElementById("course").value;
+            var passingYear = document.getElementById("passingYear").value;
+            var currentDesignation = document.getElementById("currentDesignation").value;
+            var orgName = document.getElementById("orgName").value;
+            var currentCity = document.getElementById("currentCity").value;
+            var pin = document.getElementById("pin").value;
+            var city = document.getElementById("city").value;
+            var state = document.getElementById("state").value;
+            var address = document.getElementById("address").value;
+            var createdAt = new Date().toISOString(); // Get current timestamp
+
+            var fileInput = document.getElementById('photo');
+            var file = fileInput.files[0];
+
+            if (!file) {
+                saveMessage(firstName, lastName, email, dob, rollNo, course, passingYear, currentDesignation, orgName,currentCity, pin, city, state, address, createdAt);
+                window.location.href = "./profileAlumni.html";
+                return;
+            }
+    
+            // Upload the file to Firebase Storage
+            var uploadTask = storageRef.child('photos/' + rollNo).put(file); // Use the rollNo as the filename
+    
+            uploadTask.on('state_changed', null, function(error) {
+                // Handle unsuccessful uploads
+                console.error('Error uploading photograph:', error);
+            }, function() {
+                // Handle successful uploads
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                    // Save the download URL of the uploaded photograph along with other criminal information to the database
+                    saveMessage(firstName, lastName, email, dob, rollNo, course, passingYear, currentDesignation, orgName,currentCity, pin, city, state, address, downloadURL, createdAt);
+                    localStorage.setItem('userEmail', email);
+                    window.location.href = "./Alumni/index.html";
+                });
+            });
+            
+        });
+    
+        // Function to save message to firebase
+        function saveMessage(firstName, lastName, email, dob, rollNo, course, passingYear, currentDesignation, orgName,currentCity, pin, city, state, address, photoURL, createdAt){
+            messagesRef.child(rollNo).set({
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                dob: dob,
+                rollNo: rollNo,
+                course: course,
+                passingYear: passingYear,
+                currentDesignation: currentDesignation,
+                orgName: orgName,
+                currentCity: currentCity,
+                pin: pin,
+                city: city,
+                state: state,
+                address: address,
+                photoURL: photoURL,
+                createdAt: createdAt // Store createdAt timestamp in the database
+            });
+        }
+    
+</script>
+
+</body>
+</html>

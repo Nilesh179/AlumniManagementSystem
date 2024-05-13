@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin-left: 10rem;
+      padding: 0;
+      background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+    }
+    h1 {
+      margin-top: 2em;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    div {
+      margin-bottom: 10px;
+    }
+    label {
+      font-size: 1.7rem;
+      color: #5C4033;
+      font-weight: bold;
+    }
+    span {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: black;
+      margin-left: 10px;
+    }
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Job Details</h1>
+  <div>
+    <label for="jobTitle">Job Title:</label>
+    <span id="jobTitle"></span>
+  </div>
+  <div>
+    <label for="companyName">Company Name:</label>
+    <span id="companyName"></span>
+  </div>
+  <div>
+    <label for="location">Location:</label>
+    <span id="location"></span>
+  </div>
+  <div>
+    <label for="jobType">Job Type:</label>
+    <span id="jobType"></span>
+  </div>
+  <div>
+    <label for="postedAt">Posted At:</label>
+    <span id="postedAt"></span>
+  </div>
+  <div>
+    <label for="expireIn">Expire In (days):</label>
+    <span id="expireIn"></span>
+  </div>
+  <div>
+    <label for="jobDescription">Job Description:</label>
+    <span id="jobDescription"></span>
+  </div>
+
+  <div>
+    <label for="link">Link:</label>
+    <span id="link"></span>
+  </div>
+  <button onclick="handleUpdate()">Update</button>
+
+  <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCbE3UXkP2J5-T_fSuCsmAWU_bNLiRH8aE",
+      authDomain: "alumni-management-system-3800d.firebaseapp.com",
+      projectId: "alumni-management-system-3800d",
+      storageBucket: "alumni-management-system-3800d.appspot.com",
+      messagingSenderId: "496530271243",
+      appId: "1:496530271243:web:f69ffeb96dd389511aab0e",
+      measurementId: "G-3X4HB12QQP",
+      databaseURL: "https://alumni-management-system-3800d-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = app.database();
+
+    const fetchJobDetails = () => {
+      const jobId = getQueryParameter('id');
+      const jobsRef = db.ref('JobsPosted').child(jobId);
+      jobsRef.once('value', (snapshot) => {
+        const jobDetails = snapshot.val();
+        if (jobDetails) {
+          document.getElementById('jobTitle').textContent = jobDetails.title;
+          document.getElementById('companyName').textContent = jobDetails.name;
+          document.getElementById('location').textContent = jobDetails.location;
+          document.getElementById('jobType').textContent = jobDetails.type;
+          document.getElementById('postedAt').textContent = jobDetails.createdAt;
+          document.getElementById('expireIn').textContent = jobDetails.days;
+          document.getElementById('jobDescription').textContent = jobDetails.description;
+          document.getElementById('link').textContent = jobDetails.link;
+        }
+      });
+    };
+
+    const handleUpdate = () => {
+      const jobId = getQueryParameter('id');
+      window.location.href = `./JobUpdate.html?id=${jobId}`;
+    };
+
+    document.addEventListener('DOMContentLoaded', fetchJobDetails);
+
+    const getQueryParameter = (name) => {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    };
+  </script>
+</body>
+</html>

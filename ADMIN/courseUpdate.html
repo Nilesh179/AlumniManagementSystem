@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Course Details</title>
+    <style>
+        body {
+            background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        .update-container {
+            margin-top: 50px;
+            text-align: center;
+        }
+        input[type=text], input[type=file], select, button {
+            padding: 12px 20px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="update-container">
+    <h2>Update Course Details</h2>
+
+    <form id="updateForm">
+        <label for="course">Course Name:</label><br>
+        <input type="text" id="course" name="course" disabled><br><br>
+
+        <label for="duration">Course Duration:</label><br>
+        <input type="text" id="duration" name="duration"><br><br>
+
+        <label for="criteria">Eligibility Criteria:</label><br>
+        <input type="text" id="criteria" name="criteria"><br><br>
+        <br>
+        <button type="submit">Update</button>
+    </form> 
+    <div id="updateMessage" style="margin-top: 20px; display: none; border: 2px solid red; padding: 1.3em;"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+
+<script>
+    // Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyCbE3UXkP2J5-T_fSuCsmAWU_bNLiRH8aE",
+        authDomain: "alumni-management-system-3800d.firebaseapp.com",
+        projectId: "alumni-management-system-3800d",
+        storageBucket: "alumni-management-system-3800d.appspot.com",
+        messagingSenderId: "496530271243",
+        appId: "1:496530271243:web:f69ffeb96dd389511aab0e",
+        measurementId: "G-3X4HB12QQP",
+        databaseURL: "https://alumni-management-system-3800d-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Reference to the Firebase database
+    var database = firebase.database();
+
+    // Get elements
+    var updateForm = document.getElementById('updateForm');
+    var updateMessage = document.getElementById('updateMessage');
+    var courseInput = document.getElementById('course');
+
+    // Function to search for job record and pre-fill the form
+    function searchJobRecord() {
+        var courseId = getQueryParameter('id'); // Get ID from URL
+        if (courseId !== null) {
+            database.ref('Course/' + courseId).once('value', function(snapshot) {
+                var data = snapshot.val();
+                if (data) {
+                    // Display update form with existing details
+                    courseInput.value = courseId;
+                    document.getElementById('duration').value = data.duration || '';
+                    document.getElementById('criteria').value = data.criteria || '';
+                    // Display update form
+                    updateForm.style.display = 'block';
+                } else {
+                    alert('Course record not found.');
+                }
+            });
+        } else {
+            alert('Invalid URL parameter.');
+        }
+    }
+
+    // Listen for form submission
+    updateForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form values
+        var courseId = document.getElementById('course').value;
+        var duration = document.getElementById('duration').value;
+        var criteria = document.getElementById('criteria').value;
+
+        // Update information in Firebase
+        var updates = {};
+        updates['Course/' + courseId + '/duration'] = duration;
+        updates['Course/' + courseId + '/criteria'] = criteria;
+
+        // Call function to update Firebase
+        updateFirebase(updates);
+    });
+
+    // Function to update information in Firebase
+    function updateFirebase(updates) {
+        database.ref().update(updates, function(error) {
+            if (error) {
+                updateMessage.innerHTML = 'Error updating information: ' + error.message;
+                updateMessage.style.color = 'red';
+            } else {
+                updateMessage.innerHTML = 'Information updated successfully';
+                updateMessage.style.color = 'green';
+                // Clear form after successful update
+                updateForm.reset();
+                // Hide update form
+                updateForm.style.display = 'none';
+                // Redirect to the previous page
+                window.history.back();
+            }
+            // Show update message
+            updateMessage.style.display = 'block';
+            setTimeout(function(){
+                updateMessage.style.display = 'none';
+            }, 3000);
+        });
+    }
+
+    // Function to get query parameter from URL
+    const getQueryParameter = (name) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    };
+
+    // Call searchJobRecord function on page load
+    searchJobRecord();
+</script>
+
+</body>
+</html>

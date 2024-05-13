@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta duration="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CourseAdmin</title>
+  <style>
+    body{
+      background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+    }
+    .ADD{
+    height: 100vh;
+}
+h2{
+    text-align: center;
+    margin: 2rem;
+  }
+  .tbl{  
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .tbl thead {
+    background: #424949;
+    color: #fff;
+  }
+  .tbl thead tr th {
+    font-size: 1.5rem;
+    padding: 0.8rem;
+    letter-spacing: 0.2rem;
+    vertical-align: top;
+    border: 1px solid #aab7b8;
+  }
+  .tbl tbody tr td {
+    font-size: 1rem;
+    font-weight: normal;
+    text-align: center;
+    border: 1px solid #aab7b8;
+    padding: 0.8rem;
+  }
+  .tbl tr:nth-child(even) {
+    background: #ccc;
+    transition: all 0.3s ease-in;
+    cursor: pointer;
+  }
+  .tbl tr:hover td {
+    background: #839192;
+    color: #000;
+    transition: all 0.3s ease-in;
+    cursor: pointer;
+  }
+  .delete-button {
+    color: red;
+    cursor: pointer;
+  }
+  .delete-button:hover {
+    text-decoration: underline;
+  }
+  .ADD button {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .ADD button:hover {
+    background-color: #d32f2f;
+  }
+  .newButton{
+    text-align: right;
+    padding: 0.8rem;
+  }
+  .newBtn{
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 1.5rem;
+    cursor: pointer; /* Added cursor pointer */
+  }
+  .search{
+    font-size: 1rem;
+    font-weight: normal;
+    text-align: center;
+    padding: 0.8rem;
+  }
+  #searchInput{
+    width: 130px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+  background-image: url('searchicon.png');
+  background-position: 10px 10px; 
+  background-repeat: no-repeat;
+  padding: 12px 20px 12px 40px;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+  }
+  #searchInput:focus {
+  width: 85%;
+}
+  </style>
+</head>
+<body>
+  <div class="ADD" id="ADD">
+    <h2>Courses AVAILABLE</h2>
+    <div class="newButton">
+      <!-- Corrected onclick function -->
+      <button class="newBtn" onclick="redirectToNewPage()">+ NEW</button>
+    </div>
+    <div class="search">
+      <input type="text" id="searchInput" placeholder="Search by course or date (yyyy-mm-dd)">
+      <button onclick="handleSearch()">Search</button>
+    </div>
+    <table class="tbl" id="employeeList">
+      <thead>
+        <tr>
+          <th>Select</th>
+          <th>Course</th>
+          <th>Duration</th>
+          <th>Eligibility Criteria</th>
+          <th>Posted At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="reviewsList">
+        <!-- Reviews will be dynamically added here -->
+      </tbody>
+    </table>
+    <button class="deleteAllBtn" id="deleteAllBtn">Delete Selected Reviews</button>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      // Your Firebase config details here
+      apiKey: "AIzaSyCbE3UXkP2J5-T_fSuCsmAWU_bNLiRH8aE",
+      authDomain: "alumni-management-system-3800d.firebaseapp.com",
+      projectId: "alumni-management-system-3800d",
+      storageBucket: "alumni-management-system-3800d.appspot.com",
+      messagingSenderId: "496530271243",
+      appId: "1:496530271243:web:f69ffeb96dd389511aab0e",
+      measurementId: "G-3X4HB12QQP",
+      databaseURL: "https://alumni-management-system-3800d-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const reviewsList = document.getElementById('reviewsList');
+    const deleteAllBtn = document.getElementById('deleteAllBtn');
+
+
+    // Function to handle search
+    const handleSearch = () => {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const reviews = document.querySelectorAll('#reviewsList tr');
+      
+      reviews.forEach(review => {
+        const course = review.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        const createdAt = review.querySelector('td:nth-child(5)').textContent.toLowerCase();
+
+        if (course.includes(searchTerm) || createdAt.includes(searchTerm)) {
+          review.style.display = 'table-row';
+        } else {
+          review.style.display = 'none';
+        }
+      });
+    };
+
+    // Function to redirect to new page
+    const redirectToNewPage = () => {
+      window.location.href = './courseNew.html'; // Corrected redirection
+    };
+
+    const handleView = (id) => {
+      window.location.href = `./courseDetails.html?id=${id}`; // Corrected redirection
+    };
+
+    const fetchReviews = () => {
+      db.ref('Course').on('value', (snapshot) => {
+        reviewsList.innerHTML = ''; // Clear the previous reviews
+
+        const reviewsData = snapshot.val();
+        if (reviewsData) {
+          Object.entries(reviewsData).forEach(([id, review]) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>
+                <input type="checkbox" duration="select" value="${id}" />
+              </td>
+              <td>${review.course}</td>
+              <td>${review.duration}</td>
+              <td>${review.criteria}</td>
+              <td>${review.createdAt}</td>
+              <td>
+                <button class="btn_trash" onclick="handleView('${id}')">View Details</button>
+                <button class="btn_trash" onclick="handleDelete('${id}')">Delete</button>
+              </td>
+            `;
+            reviewsList.appendChild(tr);
+          });
+        }
+      });
+    };
+
+    const handleDelete = (id) => {
+      const confirmDelete = window.confirm("Are you sure you want to delete this REQUEST?");
+      if (confirmDelete) {
+        db.ref(`Course/${id}`).remove()
+          .then(() => {
+            console.log("REQUEST successfully deleted!");
+            fetchReviews(); // Refresh the reviews after deletion
+          })
+          .catch((error) => {
+            console.error("Error removing REQUEST: ", error);
+          });
+      }
+    };
+
+    const handleDeleteSelected = () => {
+      const selectedReviews = document.querySelectorAll('input[duration=select]:checked');
+      if (selectedReviews.length === 0) {
+        alert('Please select at least one REQUEST to delete.');
+      } else {
+        const confirmDelete = window.confirm("Are you sure you want to delete the selected REQUEST?");
+        if (confirmDelete) {
+          selectedReviews.forEach((checkbox) => {
+            const id = checkbox.value;
+            db.ref(`Course/${id}`).remove();
+          });
+          fetchReviews(); // Refresh the reviews after deletion
+        }
+      }
+    };
+
+    // Fetch reviews on page load
+    document.addEventListener('DOMContentLoaded', fetchReviews);
+
+    // Add event listener for delete all button
+    deleteAllBtn.addEventListener('click', handleDeleteSelected);
+  </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta duration="viewport" content="width=device-width, initial-scale=1.0">
+<title>Placement Form</title>
+<style>
+  body { background-color: #333; color: #fff; font-family: Arial, sans-serif; text-align: center;}
+  h1 {text-align: center; margin-top: 1.6em;}
+  .alert {background-color: #28a745; color: #fff; pointer-events: none; padding: 8px; border-radius: 4px; border: 1px solid #555; }
+  form { max-width: 500px; margin: 20px auto; padding: 30px; background: #222; border-radius: 8px; text-align: initial;}
+  label { display: block; margin-top: 10px; }
+  input, button, textarea { width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #555; background: #444; color: #ddd; }
+  input[type="radio"] { width: auto; }
+  button[type="submit"] { background-color: #28a745; color: #fff; cursor: pointer; margin-top: 1.1em; }
+  button[type="submit"]:hover { background-color: #218838; }
+</style>
+</head>
+<body>
+  <h1>Placement Information Form</h1>
+  <div class="alert" style="display: none;">Your message has been sent</div>
+  <form id="insertRecord">
+    <label for="year">Year:</label>
+    <input type="text" id="year" duration="year" required>
+
+    <label for="course">Placement:</label>
+    <input type="text" id="course" duration="course" required>
+
+    <label for="batch">Batch:</label>
+    <input type="text" id="batch" duration="batch" required>
+
+    <label for="total">Total:</label>
+    <input type="number" id="total" duration="total" required>
+
+    <label for="placed">Placed:</label>
+    <input type="number" id="placed" duration="placed" oninput="calculatePercent()">
+
+    <label for="percent">Percent:</label>
+    <input type="number" id="percent" duration="percent">
+
+    <label for="companies">Companies:</label>
+    <input type="text" id="companies" duration="companies" required>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-storage.js"></script>
+  
+    <script>
+        var config = {
+
+            apiKey: "AIzaSyCbE3UXkP2J5-T_fSuCsmAWU_bNLiRH8aE",
+            authDomain: "alumni-management-system-3800d.firebaseapp.com",
+            projectId: "alumni-management-system-3800d",
+            storageBucket: "alumni-management-system-3800d.appspot.com",
+            messagingSenderId: "496530271243",
+            appId: "1:496530271243:web:f69ffeb96dd389511aab0e",
+            measurementId: "G-3X4HB12QQP",
+            databaseURL: "https://alumni-management-system-3800d-default-rtdb.asia-southeast1.firebasedatabase.app/",
+        };
+    
+        firebase.initializeApp(config);
+    
+        // Function to get form values
+        function getInputVal(id){
+            return document.getElementById(id).value;
+        }
+    
+        // Reference messages collection
+        var messagesRef = firebase.database().ref('Placement');
+    
+        // Listen for form submit
+        document.getElementById('insertRecord').addEventListener('submit', function(e) {
+            e.preventDefault();
+    
+            // Get form values
+            var year = getInputVal('year');
+            var course = getInputVal('course');
+            var batch = getInputVal('batch');
+            var total = getInputVal('total');
+            var placed = getInputVal('placed');
+            var percent = getInputVal('percent');
+            var companies = getInputVal('companies');
+            var createdAt = new Date().toISOString(); // Get current timestamp
+    
+            saveMessage(year, course, batch, total, placed, percent, companies, createdAt);
+            // Show alert
+            document.querySelector('.alert').style.display = 'inline-block';
+    
+            // Hide alert after 3 seconds
+            setTimeout(function(){
+                document.querySelector('.alert').style.display = 'none';
+            }, 3000);
+    
+            // Clear form
+            document.getElementById('insertRecord').reset();
+        });
+    
+        // Function to save message to firebase
+        function saveMessage(year, course, batch, total, placed, percent, companies, createdAt){
+            messagesRef.child(batch).set({
+                year: year,
+                course: course,
+                batch: batch,
+                total: total,
+                placed: placed,
+                percent: percent,
+                companies: companies,
+                createdAt: createdAt // Store createdAt timestamp in the database
+            });
+        }
+
+        // Function to calculate percentage
+        function calculatePercent() {
+            var total = document.getElementById('total').value;
+            var placed = document.getElementById('placed').value;
+            if (total && placed) {
+                var percent = (placed / total) * 100;
+                document.getElementById('percent').value = percent.toFixed(2);
+            }
+        }
+    </script>
+      
+</body>
+</html>

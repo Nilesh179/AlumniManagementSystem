@@ -1,0 +1,513 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="awesome_fonts/css/font-awesome.css">
+<link rel="stylesheet" type="text/css" href="awesome_fonts/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="Main_style.css">
+
+<style type="text/css">
+
+.style1 {font-size: 36px}
+.style4 {font-size: 24px}
+
+#main{
+	text-align: center;
+	color: #000;
+}
+
+.form-box{
+	margin-left: 350px;
+	margin-bottom: 150px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 512px;
+    height: 420px;
+    overflow: hidden;
+    z-index: 2;
+}
+.login-container{
+    position: absolute;
+    left: 4px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+	row-gap: 10px;
+    transition: .5s ease-in-out;
+}
+.register-container{
+    position: absolute;
+    right: -520px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+	row-gap: 10px;
+    transition: .5s ease-in-out;
+}
+.top span{
+    color: #000;
+    font-size: medium;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+.top span a{
+    font-weight: 600;
+    color: #1619e9;
+    margin-left: 5px;
+}
+header{
+    color: #000;
+    font-size: 30px;
+	font-weight: 600;
+    text-align: center;
+    padding: 10px 0 30px 0;
+}
+.two-forms{
+    display: flex;
+    gap: 10px;
+}
+.input-field{
+    font-size: 15px;
+    background: rgba(255, 255, 255, 0.2);
+	border: 1px solid black;
+    color: #000;
+    height: 50px;
+    width: 87%;
+    padding: 0 10px 0 45px;
+    /* border: none; */
+    border-radius: 30px;
+    outline: none;
+    transition: .2s ease;
+
+}
+.input-field:hover, .input-field:focus{
+    background: rgba(255, 255, 255, 0.25);
+}
+::-webkit-input-placeholder{
+    color: #000;
+}
+.input-box i{
+    position: relative;
+    top: -35px;
+    left: 17px;
+    color: #000;
+}
+.submit{
+    font-size: 15px;
+    font-weight: 500;
+    color: #000;
+    height: 45px;
+    width: 100%;
+    border: none;
+    border-radius: 30px;
+    outline: none;
+    background: rgba(87, 83, 83, 0.671);
+    cursor: pointer;
+    transition: .3s ease-in-out;
+}
+.submit:hover{
+    background: rgba(100, 85, 85, 0.925);
+    box-shadow: 1px 5px 7px 1px rgba(111, 112, 103, 0.301);
+}
+.two-col{
+    display: flex;
+    justify-content: space-between;
+    color: #000;
+    font-size: small;
+    margin-top: 10px;
+}
+.two-col .one{
+    display: flex;
+    gap: 5px;
+}
+.two label a{
+    text-decoration: none;
+    color: #000;
+}
+.two label a:hover{
+    text-decoration: underline;
+}
+
+
+
+</style>
+<title>Login/Register</title>
+</head>
+
+<body>
+
+
+
+
+<div id="wrap">
+
+
+	<div id="header">
+  <table width="100%" border="0">
+    <tr>
+      <td width="14%" rowspan="3"><div align="center"><span class="style1"><img src="images/skit_logo.png" width="158" height="113" alt="mono" /></span></div></td>
+      <td width="86%"><div align="left"><span >Swami Keshvanand Institute of Technology,
+        Management & Gramothan, Jaipur</span></div></td>
+    </tr>
+    <tr>
+      <td height="38"><div align="left"><span class="style4">Ramnagaria, Jagatpura
+        Jaipur-302 017,
+        Rajasthan
+        India</span></div></td>
+    </tr>
+    <tr>
+      <td height="30"><span class="style4">Alumni Association</span></td>
+    </tr>
+  </table>
+  </div>
+
+
+  <ul id="nav">
+    <li><a href="index.html" title="#"><i class="fa fa-home fa-1g" style="color:#FFFFFF;"></i> Home</a></li>
+    <li><a href="course.html" title="List of the Courses"><i class="fa fa-book fa-1g" style="color:#FFFFFF;"></i> Course</a></li>
+    <li><a href="placement.html" title="Placement Record"><i class="fa fa-dollar fa-1g" style="color:#FFFFFF;"></i> Placement</a></li>
+    <li><a href="gallery.html" title="Gallery"><i class="fa fa-picture-o fa-2g" style="color:#FFFFFF;"></i> Gallery</a></li>
+    <li><a href="./contactus.html" title="conatctUs"><i class="fa fa-street-view fa-2g" style="color:#FFFFFF;"></i> ContactUs</a></li>
+    
+    <li style="float:right" class="active"><a href="register.html" title="Register for the Alumni"><strong><i class="fa fa-pencil-square-o fa-2g" style="color:#FFFFFF;"></i> Register</strong></a></li>
+    </ul>
+
+
+
+
+
+<div id="side_r">
+
+
+ <div class="pannel" style="height:auto;">
+			<div class="pannel-header"><i class="fa fa-search fa-1g" style="color:#FFFFFF;"></i> Search</div>
+			<div class="pannel-body">
+			<input type="text" name="search_text" id="search_text" placeholder="Search Keyword....."/>
+			<input type="button" name="btn_search" id="btn_search" value="Search" style="display:block; width:50%; margin:auto; padding : 3px;"/>
+			</div>
+			
+	</div>
+
+
+
+
+
+
+<div class="pannel">
+			<div class="pannel-header"><i class="fa fa-calendar fa-1g" style="color:#FFFFFF;"></i> Latest News: <a href="events.html" title="GO TO ALL EVENTS PAGE"><i class="fa fa-arrow-circle-right fa-1g" style="color:#FFFFFF; float:right;"></i> </a></div>
+			<div class="pannel-body">
+			<ul>
+				<marquee direction="up"   onmouseover="this.stop();" onmouseout="this.start();">
+				<li><a href="#" title="#">Next week will be a workshop on networking</a></li><hr>
+				<li><a href="#" title="#">Next week will be a workshop on Web Technology</a></li><hr>
+				<li><a href="#" title="#">Next week will be a workshop on networking</a></li><hr>
+				<li><a href="#" title="#">Next week will be a workshop on Web Technology</a></li><hr>
+				
+				</marquee>
+			</ul>
+			
+			</div>
+			
+	</div>
+
+
+
+    
+    <div class="pannel" style="height:auto;">
+			<div class="pannel-header">Follow Us </div>
+			<div class="pannel-body">
+			<A HREF="#" title="Go To Facebook PAge" style="color:#333"><i class="fa fa-facebook-square fa-2x" ></i></a>
+            <A HREF="#" title="Go To google-plus page" style="color:#333"><i class="fa fa-google-plus-square fa-2x" ></i></a>
+            <A HREF="#" title="Go To twitter page" style="color:#333"><i class="fa fa-twitter-square fa-2x" ></i></a>
+            <A HREF="#" title="Go To youtube channel" style="color:#333"><i class="fa fa-youtube fa-2x" ></i></a>
+            <A HREF="#" title="Go To rss site" style="color:#333"><i class="fa fa-rss-square fa-2x" ></i></a>
+            <A HREF="#" title="Go To linkedin account" style="color:#333"><i class="fa fa-linkedin-square fa-2x" ></i></a>
+            
+			
+			</div>
+			
+	</div>
+
+</div><!--End of the side bar -->
+
+
+
+<div id="main">
+	<div class="form-box">
+
+		<!------------------- login form ------------------------>
+
+		<div class="login-container" id="login">
+			<div class="top">
+				<span>Don't have an account? <a href="#" onclick="register()">Sign Up</a></span>
+				<header>Login</header>
+			</div>
+			<div class="input-box">
+				<input type="email" class="input-field" id="loginEmail" placeholder="Username or Email">
+				<i class="bx bx-user"></i>
+			</div>
+			<div class="input-box">
+				<input type="password" class="input-field" id="loginPassword" placeholder="Password">
+				<i class="bx bx-lock-alt"></i>
+			</div>
+			<div class="input-box">
+				<input type="submit" class="submit" value="Sign In" onclick="signIn()">
+			</div>
+			<!-- <div class="two-col">
+				<div class="one">
+					<input type="checkbox" id="login-check">
+					<label for="login-check"> Remember Me</label>
+				</div>
+				<div class="two">
+					<label><a href="#">Forgot password?</a></label>
+				</div>
+			</div> -->
+		</div>
+
+		<!------------------- registration form -------------------------->
+		<div class="register-container" id="register">
+			<div class="top">
+				<span>Have an account? <a href="#" onclick="login()">Login</a></span>
+				<header>Sign Up</header>
+			</div>
+			<div class="input-box">
+				<input type="email" class="input-field" id="registerEmail" placeholder="Email">
+				<i class="bx bx-envelope"></i>
+			</div>
+			<div class="input-box">
+				<input type="password" class="input-field" id="registerPassword" placeholder="Password">
+				<i class="bx bx-lock-alt"></i>
+			</div>
+			<div class="input-box">
+				<input type="submit" class="submit" id="submit" value="Register" onclick="signUp()">
+			</div>
+			<!-- <div class="two-col">
+				<div class="one">
+					<input type="checkbox" id="register-check">
+					<label for="register-check"> Remember Me</label>
+				</div>
+				<div class="two">
+					<label><a href="#">Terms & conditions</a></label>
+				</div>
+			</div> -->
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+<div id="footer">
+<center>
+  	<a href="gallery.html" title="List of photos of events">Gallery</a> | 
+    <a href="downloads.html" title="list of Downloads">Downloads</a> | 
+    <a href="contactus.html" title="Contanct Us Page">Contact Us</a> | 
+    <a href="http://www.skit.ac.in" title="Go To University Website">University Website</a> |
+	<a href="https://transformingindia.mygov.in/scheme/pms-scholarship-scheme/" title="Go To Schlorship Portal">Schlorship Portal</a> |
+	<a href="https://www.antiragging.in/" title="Go To Anti-Ragging Website">Anti-Ragging Website</a> |
+    <br>
+    <br>
+    
+</center>  
+</div>
+
+
+
+
+
+</div>
+
+</FORM>
+
+<script>
+    // function myMenuFunction() {
+    //     var i = document.getElementById("navMenu");
+
+    //     if (i.className === "nav-menu") {
+    //         i.className += " responsive";
+    //     } else {
+    //         i.className = "nav-menu";
+    //     }
+    // }
+
+    // var a = document.getElementById("loginBtn");
+    // var b = document.getElementById("registerBtn");
+    var x = document.getElementById("login");
+    var y = document.getElementById("register");
+
+    function login() {
+        x.style.left = "4px";
+        y.style.right = "-520px";
+        // a.className += " white-btn";
+        // b.className = "btn";
+        x.style.opacity = 1;
+        y.style.opacity = 0;
+    }
+
+    function register() {
+        x.style.left = "-510px";
+        y.style.right = "5px";
+        // a.className = "btn";
+        // b.className += " white-btn";
+        x.style.opacity = 0;
+        y.style.opacity = 1;
+    }
+</script>
+
+
+<script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+
+
+<script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyCbE3UXkP2J5-T_fSuCsmAWU_bNLiRH8aE",
+        authDomain: "alumni-management-system-3800d.firebaseapp.com",
+        projectId: "alumni-management-system-3800d",
+        storageBucket: "alumni-management-system-3800d.appspot.com",
+        messagingSenderId: "496530271243",
+        appId: "1:496530271243:web:f69ffeb96dd389511aab0e",
+        measurementId: "G-3X4HB12QQP",
+        databaseURL: "https://alumni-management-system-3800d-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    function signUp() {
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+
+        // Check if email and password are provided
+        if (!email || !password) {
+            alert('Email and password are required.');
+            return;
+        }
+
+        // Check if the email exists in the Students database
+        database.ref('Students').orderByChild('email').equalTo(email).once('value')
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    // Email exists in the database, proceed with registration
+                    auth.createUserWithEmailAndPassword(email, password)
+                        .then((userCredential) => {
+                            // Signed up
+                            const user = userCredential.user;
+                            console.log('Signed up:', user);
+                            // Save user data to database
+                            saveUserData(user.uid, email);
+                            // Clear the form fields
+                            document.getElementById('registerEmail').value = '';
+                            document.getElementById('registerPassword').value = '';
+                            // Redirect to the new HTML page
+                            localStorage.setItem('userEmail', email);
+                            window.location.href = './profileAlumni.html';
+                        })
+                        .catch((error) => {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.error('Sign up error:', errorMessage);
+                            alert(errorMessage);
+                        });
+                } else {
+                    // Email does not exist in the database
+                    console.error('You are not a college student.');
+                    alert('You are not a college student.');
+                }
+            })
+            .catch((error) => {
+                console.error('Error checking email existence:', error.message);
+            });
+    }
+
+    function saveUserData(userId, email) {
+        const userData = {
+            email: email,
+            verified: false // Mark email as unverified initially
+        };
+        database.ref('users/' + userId).set(userData)
+            .then(() => {
+                console.log('User data saved to database');
+            })
+            .catch((error) => {
+                console.error('Error saving user data:', error.message);
+            });
+    }
+
+    function signIn() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        // Check if email and password are provided
+        if (!email || !password) {
+            alert('Email and password are required.');
+            return;
+        }
+
+        // Perform sign-in with Firebase authentication
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Signed in successfully
+                const user = userCredential.user;
+                console.log('Signed in:', user);
+
+                // Check if the entered email and password match the predefined values
+                if (email === "admin@alumni.ac.in" && password === "Nilesh@123") {
+                    // Redirect to a different HTML page
+                    localStorage.setItem('userEmail', email);
+                    window.location.href = "./ADMIN/index.html";
+                } else {
+                    database.ref('AlumniProfiles').orderByChild('email').equalTo(email).once('value')
+                    .then((snapshot) => {
+                        if (snapshot.exists()) {
+                            // Email exists in the database, proceed without profile page
+                            localStorage.setItem('userEmail', email);
+                            window.location.href = "./Alumni/index.html";
+                        } else {
+                            // Profile does not exist, redirect to profileAlumni.html
+                            localStorage.setItem('userEmail', email);
+                            window.location.href = "./profileAlumni.html";
+                        }
+                    })
+                    .catch((error) => {
+                                    console.error('Error fetching profile data:', error.message);
+                                    // Redirect to profileAlumni.html in case of error
+                                    localStorage.setItem('userEmail', email);
+                                    window.location.href = "./profileAlumni.html";
+                                });
+                }
+            })
+            .catch((error) => {
+                // Handle sign-in errors
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.error('Sign in error:', errorMessage);
+                
+                // Display different alert messages based on error code
+                if (errorCode === 'auth/user-not-found') {
+                    alert('Email does not exist.');
+                }else {
+                    alert("Invalid LogIn Credentials");
+                }
+            });
+    }
+
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UpdateJob</title>
+    <style>
+        body {
+            background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        .update-container {
+            margin-top: 50px;
+            text-align: center;
+        }
+        input[type=text], input[type=file], select, button {
+            padding: 12px 20px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="update-container">
+    <h2>Update Alumni Details</h2>
+
+    <form id="updateForm">
+        <!-- Personal Information -->
+        <h3>Personal Information</h3>
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" disabled>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" disabled>
+        <label for="photo">Photo:</label>
+        <input type="file" id="photo">
+        <label for="email">Email:</label>
+        <input type="email" id="email" disabled>
+        <label for="dob">DOB:</label>
+        <input type="date" id="dob" disabled>
+        
+        <!-- Course Information -->
+        <h3>Course Information</h3>
+        <label for="rollNo">Roll No:</label>
+        <input type="text" id="rollNo" disabled>
+        <label for="course">Course:</label>
+        <input type="text" id="course" disabled>
+        <label for="passingYear">Passing Year:</label>
+        <input type="number" id="passingYear" disabled>
+        
+        <!-- Professional Information -->
+        <h3>Professional Information</h3>
+        <label for="currentDesignation">Current Designation:</label>
+        <input type="text" id="currentDesignation">
+        <label for="orgName">Name of Organisation:</label>
+        <input type="text" id="orgName">
+        <label for="currentCity">Current City:</label>
+        <input type="text" id="currentCity">
+        
+        <!-- Address Details -->
+        <h3>Address Details</h3>
+        <label for="pin">PIN:</label>
+        <input type="number" id="pin" required>
+        <label for="city">City:</label>
+        <input type="text" id="city" required>
+        <label for="state">State:</label>
+        <input type="text" id="state" required>
+        <label for="address">Address:</label>
+        <textarea id="address" required></textarea>
+        
+        <!-- Buttons -->
+        <button type="submit">Update Profile</button>
+    </form> 
+    <div id="updateMessage" style="margin-top: 20px; display: none; border: 2px solid red; padding: 1.3em;"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+
+<script>
+    // Firebase configuration
+    var config = {
+        apiKey: "AIzaSyCbE3UXkP2J5-T_fSuCsmAWU_bNLiRH8aE",
+        authDomain: "alumni-management-system-3800d.firebaseapp.com",
+        projectId: "alumni-management-system-3800d",
+        storageBucket: "alumni-management-system-3800d.appspot.com",
+        messagingSenderId: "496530271243",
+        appId: "1:496530271243:web:f69ffeb96dd389511aab0e",
+        measurementId: "G-3X4HB12QQP",
+        databaseURL: "https://alumni-management-system-3800d-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(config);
+
+    // Reference to the Firebase database
+    var database = firebase.database();
+
+    // Get elements
+    var updateForm = document.getElementById('updateForm');
+    var updateMessage = document.getElementById('updateMessage');
+    var criminalNumberUpdateInput = document.getElementById('rollNo');
+
+    // Function to search for criminal record
+    function searchCriminal() {
+        var rollNo = getQueryParameter('id'); // Get ID from URL
+        if (rollNo !== null) {
+            database.ref('AlumniProfiles/' + rollNo).once('value', function(snapshot) {
+                var data = snapshot.val();
+                if (data) {
+                    // Display update form with existing details
+                    criminalNumberUpdateInput.value = rollNo;
+                    document.getElementById("firstName").value = data.firstName || '';
+                    document.getElementById("lastName").value = data.lastName || '';
+                    document.getElementById("dob").value = data.dob || '';
+                    document.getElementById("course").value = data.course || '';
+                    document.getElementById("passingYear").value = data.passingYear || '';
+                    document.getElementById("currentDesignation").value = data.currentDesignation || '';
+                    document.getElementById("orgName").value = data.orgName || '';
+                    document.getElementById("currentCity").value = data.currentCity || '';
+                    document.getElementById("pin").value = data.pin || '';
+                    document.getElementById("city").value = data.city || '';
+                    document.getElementById("state").value = data.state || '';
+                    document.getElementById("address").value = data.address || '';
+                    // Display update form
+                    updateForm.style.display = 'block';
+                } else {
+                    alert('Alumni record not found.');
+                }
+            });
+        } else {
+            alert('Invalid URL parameter.');
+        }
+    }
+
+    // Listen for form submission
+    updateForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form values
+        var rollNo = document.getElementById('rollNo').value;
+        var firstName = document.getElementById("firstName").value;
+        var lastName = document.getElementById("lastName").value;
+        var dob = document.getElementById("dob").value;
+        var course = document.getElementById("course").value;
+        var passingYear = document.getElementById("passingYear").value;
+        var currentDesignation = document.getElementById("currentDesignation").value;
+        var orgName = document.getElementById("orgName").value;
+        var currentCity = document.getElementById("currentCity").value;
+        var pin = document.getElementById("pin").value;
+        var city = document.getElementById("city").value;
+        var state = document.getElementById("state").value;
+        var address = document.getElementById("address").value;
+
+        // Update information in Firebase
+        var updates = {};
+        updates['AlumniProfiles/' + rollNo + '/rollNo'] = rollNo;
+        updates['AlumniProfiles/' + rollNo + '/firstName'] = firstName;
+        updates['AlumniProfiles/' + rollNo + '/lastName'] = lastName;
+        updates['AlumniProfiles/' + rollNo + '/dob'] = dob;
+        updates['AlumniProfiles/' + rollNo + '/course'] = course;
+        updates['AlumniProfiles/' + rollNo + '/passingYear'] = passingYear;
+        updates['AlumniProfiles/' + rollNo + '/currentDesignation'] = currentDesignation;
+        updates['AlumniProfiles/' + rollNo + '/orgName'] = orgName;
+        updates['AlumniProfiles/' + rollNo + '/currentCity'] = currentCity;
+        updates['AlumniProfiles/' + rollNo + '/pin'] = pin;
+        updates['AlumniProfiles/' + rollNo + '/city'] = city;
+        updates['AlumniProfiles/' + rollNo + '/state'] = state;
+        updates['AlumniProfiles/' + rollNo + '/address'] = address;
+
+        // Call function to update Firebase
+        updateFirebase(updates);
+    });
+
+    // Function to update information in Firebase
+    function updateFirebase(updates) {
+        database.ref().update(updates, function(error) {
+            if (error) {
+                updateMessage.innerHTML = 'Error updating information: ' + error.message;
+                updateMessage.style.color = 'red';
+            } else {
+                updateMessage.innerHTML = 'Information updated successfully';
+                updateMessage.style.color = 'green';
+                // Clear form after successful update
+                updateForm.reset();
+                // Hide update form
+                updateForm.style.display = 'none';
+                // Redirect to the previous page
+                window.history.back();
+            }
+            // Show update message
+            updateMessage.style.display = 'block';
+            setTimeout(function(){
+                updateMessage.style.display = 'none';
+            }, 3000);
+        });
+    }
+
+    // Function to get query parameter from URL
+    const getQueryParameter = (name) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    };
+
+    // Call searchCriminal function on page load
+    searchCriminal();
+</script>
+
+</body>
+</html>
