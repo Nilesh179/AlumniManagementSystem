@@ -250,7 +250,7 @@ header{
 				<i class="bx bx-user"></i>
 			</div>
 			<div class="input-box">
-				<input type="password" class="input-field" id="loginPassword" placeholder="Password">
+				<input type="password" class="input-field" id="loginPassword" placeholder="Password" >
 				<i class="bx bx-lock-alt"></i>
 			</div>
 			<div class="input-box">
@@ -278,9 +278,9 @@ header{
 				<i class="bx bx-envelope"></i>
 			</div>
 			<div class="input-box">
-				<input type="password" class="input-field" id="registerPassword" placeholder="Password">
-				<i class="bx bx-lock-alt"></i>
-			</div>
+                <input type="password" class="input-field" id="loginPassword" placeholder="Password" pattern="^(?=.\d)(?=.[a-z])(?=.[A-Z])(?=.[!@#$%^&])(?=.[a-zA-Z]).{8,}$">
+                <i class="bx bx-lock-alt"></i>
+            </div>            
 			<div class="input-box">
 				<input type="submit" class="submit" id="submit" value="Register" onclick="signUp()">
 			</div>
@@ -393,6 +393,15 @@ header{
         // Check if email and password are provided
         if (!email || !password) {
             alert('Email and password are required.');
+            return;
+        }
+
+        // Regular expression for password validation
+        const passwordRegex = /^(?=.\d)(?=.[a-z])(?=.[A-Z])(?=.[!@#$%^&])(?=.[a-zA-Z]).{8,}$/;
+
+        // Check if password matches the regex pattern
+        if (!password.match(passwordRegex)) {
+            alert('Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character, and be at least 8 characters long.');
             return;
         }
 
