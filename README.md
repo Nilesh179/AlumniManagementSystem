@@ -26,4 +26,13 @@
 
 ![Job Reference Available](https://github.com/Nilesh179/AlumniManagementSystem/assets/72192808/e1394cca-0343-44ef-87e6-55d41e8b1c79)
 
+## Team Members
+
+
+We have a fantastic team working on this project:
+
+- **Nilesh Suthar** - Frontend / Backend
+- **Manan Sharma** - Frontend / Backend
+- **Navneet Tanwar** - UI/UX, Frontend
+- **Nitish Kumar Mishra** - Database / Frontend
 
