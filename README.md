@@ -40,7 +40,7 @@ Welcome to our project! You can find our hosted application at the link below:
 
 ## Team Members
 
-Meet the talented individuals behind our project:
+Meet the individuals behind our project:
 
 ### Nilesh Suthar
 - **Roles**: Frontend, Backend
