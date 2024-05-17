@@ -1,3 +1,13 @@
+# Project Title
+
+Welcome to our project! You can find our hosted application at the link below:
+
+## Hosted Project Link
+
+[Click here to view our project](https://nilesh179.github.io/AlumniManagementSystem/index.html)
+
+
+
 #Home Page
 
 ![Home Page tab](https://github.com/Nilesh179/AlumniManagementSystem/assets/72192808/4fc3e4e9-f637-459a-9e77-fdd93cbc6638)
@@ -26,13 +36,22 @@
 
 ![Job Reference Available](https://github.com/Nilesh179/AlumniManagementSystem/assets/72192808/e1394cca-0343-44ef-87e6-55d41e8b1c79)
 
+
+
 ## Team Members
 
+Meet the talented individuals behind our project:
 
-We have a fantastic team working on this project:
+### Nilesh Suthar
+- **Roles**: Frontend, Backend
 
-- **Nilesh Suthar** - Frontend / Backend
-- **Manan Sharma** - Frontend / Backend
-- **Navneet Tanwar** - UI/UX, Frontend
-- **Nitish Kumar Mishra** - Database / Frontend
+### Manan Sharma
+- **Roles**: Frontend, Backend
+
+### Navneet Tanwar
+- **Roles**: UI/UX, Frontend
+
+### Nitish Kumar Mishra
+- **Roles**: Database, Frontend
+
 
